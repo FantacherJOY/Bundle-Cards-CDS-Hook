@@ -6,7 +6,7 @@ Prospective clinical decision support (CDS) service for the ICU Liberation (ABCD
 
 ## 🏥 Clinical Overview
 
-When an ICU clinician opens a patient's chart (`patient-view`), the service inspects the preceding 24 hours of charting and evaluates adherence to Society of Critical Care Medicine (SCCM) guidelines:
+When an ICU clinician opens a patient's chart (`patient-view`), the service reviews the preceding 24 hours of charting and assesses adherence to Society of Critical Care Medicine (SCCM) guidelines:
 
 - **Component A (Pain):** Assessment documented at least 6 times / 24h (CPOT, NRS, BPS).
 - **Component B (Breathing Trials):** Spontaneous Awakening/Breathing Trial (SAT/SBT) documentation.
@@ -25,29 +25,28 @@ The service returns point-of-care decision cards indicating whether targets are 
 |---|---|
 | **`service.py`** | Live FastAPI CDS Hooks service providing Discovery (`GET /cds-services`) and Invocation (`POST /cds-services/{id}`). |
 | **`rules.json`** | Machine-readable SCCM adherence thresholds and clinical scoring criteria. |
-| **`fhir/*.valueset.json`** | 6 FHIR ValueSets defining standardized LOINC and SNOMED CT codes for each component. |
-| **`fhir/*.conceptmap.json`** | FHIR ConceptMap translating local flowsheet/item IDs to standardized codes. |
-| **`tools.py`** | Test and validation CLI (`test` for offline unit tests; `validate` for multi-database cohort checks). |
-| **`extract.py`** | eICU nurseCharting extraction script converting flowsheets to native format. |
+| **`fhir/*.valueset.json`** | 6 FHIR ValueSets defining standardized codes for each component. |
+| **`fhir/*.conceptmap.json`** | FHIR ConceptMap translating native EHR (we have eICU and MIMIC-IV) IDs to standardized codes. |
+| **`tools.py`** | Test and validation CLI (`test` for offline unit tests, and `validate` for multi-database cohort checks). |
 | **`requirements.txt`** | Python dependencies (`fastapi`, `uvicorn`, `pydantic`). |
 
 ---
 
 ## 🔌 Hospital EHR Interoperability
 
-Different ICU systems (Epic flowsheets, Cerner, Philips, MIMIC) record data using internal proprietary IDs. Because this tool uses FHIR standards, the clinical decision logic is decoupled from local charting:
+Different ICU systems (Epic flowsheets, Cerner, Philips, MIMIC) record data using internal IDs. Because this tool uses FHIR standards, the clinical decision logic is decoupled from local charting:
 
 ```
-Hospital Flowsheet Code (Epic / Cerner)
-             ↓   mapped by: fhir/*-to-standard.conceptmap.json
-Standard Codes (LOINC / SNOMED)
-             ↓   validated by: fhir/icu-liberation-[a-f].valueset.json
+Hospital Flowsheet Code (eICU)
+      ↓   mapped by: fhir/*-to-standard.conceptmap.json
+Standard Codes 
+      ↓   validated by: fhir/icu-liberation-[a-f].valueset.json
 SCCM Adherence Evaluation (rules.json & service.py)
-             ↓
+      ↓
 Point-of-Care EHR Decision Support Card
 ```
 
-To adapt this service to a new hospital, only a local ConceptMap JSON is needed; the adherence engine and alerting service remain untouched.
+To adapt this service to a new hospital, you only need a local ConceptMap JSON.
 
 ---
 
