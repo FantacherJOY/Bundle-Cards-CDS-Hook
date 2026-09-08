@@ -1,52 +1,79 @@
-# ICU Liberation Bundle, CDS Hooks service
+# ICU Liberation Bundle — CDS Hooks Service
 
-All six ABCDEF bundle cards, running as a live clinical decision support
-service. Each SCCM adherence rule becomes a CDS Hooks card that fires when a
-clinician opens the patient.
+Prospective clinical decision support (CDS) service for the ICU Liberation (ABCDEF) Bundle, implementing **HL7 CDS Hooks 2.0** and **FHIR R4**. 
 
-Concept mappings and SCCM adherence thresholds come from a published analysis of
-the ABCDEF bundle in MIMIC-IV. That work is the retrospective half. This
-repository is the prospective half. Citation to be added.
+This repository serves as the prospective companion to [vsubbian/Bundle-Cards](https://github.com/vsubbian/Bundle-Cards) and the published research:
 
-## Run it
+> Islam MF, Douglas M, Mosier J, Subbian V. **Standardizing Data Elements for Implementation of ICU Liberation Bundle.** *Applied Clinical Informatics*, 2026;17(1):52-59. [doi:10.1055/a-2802-7458](https://doi.org/10.1055/a-2802-7458)
 
-    pip install -r requirements.txt
-    python tools.py test
-    python tools.py validate
-    uvicorn service:app --reload --port 8000
+---
 
-The tests need no server and no network, and they build their own patient data in
-memory so they do not go stale. `python tests/make_sample.py` is optional and only
-writes a fixed snapshot to poke the running service by hand with curl. Discovery is then at
-http://localhost:8000/cds-services
+## 🏥 Clinical Overview
 
-## Against a real FHIR server
+When an ICU clinician opens a patient's chart (`patient-view`), the service inspects the preceding 24 hours of charting and evaluates adherence to Society of Critical Care Medicine (SCCM) guidelines:
 
-    docker run -p 8080:8080 hapiproject/hapi:latest
+- **Component A (Pain):** Assessment documented at least 6 times / 24h (CPOT, NRS, BPS).
+- **Component B (Breathing Trials):** Spontaneous Awakening/Breathing Trial (SAT/SBT) documentation.
+- **Component C (Sedation):** Arousal/sedation assessment documented at least 6 times / 24h (RASS).
+- **Component D (Delirium):** Delirium assessment documented at least 2 times / 24h (CAM-ICU).
+- **Component E (Early Mobility):** Documentation of mobility or transfer assessments.
+- **Component F (Family Engagement):** Documented family communication or meeting.
 
-Generate patients with Synthea and load them, following
-https://mitre.github.io/fhir-for-research/modules/synthea-test-server
+The service returns point-of-care decision cards indicating whether targets are **MET** or **MISSED**.
 
-Then run the CDS Hooks sandbox from https://github.com/cds-hooks/sandbox, point
-it at your FHIR server, and add http://localhost:8000 as a discovery endpoint.
-Your cards render inside a mock EHR patient view.
+---
 
-## Design
+## 📁 Repository Structure
 
-`bundle_cards.json` is the only place any code is written down. It carries all
-34 concepts across the six components, each with its standard vocabulary code,
-its OMOP concept ID, its OMOP CDM table, and the MIMIC-IV itemids used
-to find it. Everything else is derived from it.
+| File / Directory | Description |
+|---|---|
+| **`service.py`** | Live FastAPI CDS Hooks service providing Discovery (`GET /cds-services`) and Invocation (`POST /cds-services/{id}`). |
+| **`rules.json`** | Machine-readable SCCM adherence thresholds and clinical scoring criteria. |
+| **`fhir/*.valueset.json`** | 6 FHIR ValueSets defining standardized LOINC and SNOMED CT codes for each component. |
+| **`fhir/*.conceptmap.json`** | FHIR ConceptMap translating local flowsheet/item IDs to standardized codes. |
+| **`tools.py`** | Test and validation CLI (`test` for offline unit tests; `validate` for MIMIC-IV cohort checks). |
+| **`requirements.txt`** | Python dependencies (`fastapi`, `uvicorn`, `pydantic`). |
 
-    fhir/                6 ValueSets and a ConceptMap, the definitions
-    rules.json           the SCCM thresholds, which FHIR has no simple home for
-    service.py           the CDS Hooks service, reads the files above
-    tools.py             python tools.py test | validate
-    
- The
-first maps MIMIC-IV itemid to the standard code. The second maps standard code
-to OMOP concept ID. Together they are the bridge between the retrospective
-analysis and the live service, which is the part nobody usually builds.
+---
+
+## 🔌 Hospital EHR Interoperability
+
+Different ICU systems (Epic flowsheets, Cerner, Philips, MIMIC) record data using internal proprietary IDs. Because this tool uses FHIR standards, the clinical decision logic is decoupled from local charting:
+
+```
+Hospital Flowsheet Code (Epic / Cerner)
+             ↓   mapped by: fhir/*-to-standard.conceptmap.json
+Standard Codes (LOINC / SNOMED)
+             ↓   validated by: fhir/icu-liberation-[a-f].valueset.json
+SCCM Adherence Evaluation (rules.json & service.py)
+             ↓
+Point-of-Care EHR Decision Support Card
+```
+
+To adapt this service to a new hospital, only a local ConceptMap JSON is needed; the adherence engine and alerting service remain untouched.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Installation
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run Offline Tests
+Tests run in-memory with synthetic patient data (no server or network required):
+```bash
+python tools.py test
+```
+
+### 3. Run the Live Service
+```bash
+uvicorn service:app --reload --port 8000
+```
+- **Discovery endpoint:** `http://localhost:8000/cds-services`
+- **Interactive documentation (Swagger UI):** `http://localhost:8000/docs`
+- **CDS Hooks Sandbox:** Open [sandbox.cds-hooks.org](https://sandbox.cds-hooks.org), click **Add CDS Service**, and add `http://localhost:8000/cds-services`. Your cards will render directly inside the mock EHR view.
 
 ## Adherence rules implemented
 

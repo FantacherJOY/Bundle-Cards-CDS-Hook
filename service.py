@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional, Set, Tuple
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -54,6 +55,14 @@ def ambiguous_codes(comp: Dict[str, Any]) -> List[str]:
             for c in sorted(codes & set(AMBIGUOUS))]
 
 app = FastAPI(title="ICU Liberation Bundle CDS", version="0.1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/cds-services")
 def discovery():
@@ -148,7 +157,8 @@ def build_card(comp, count):
                      "so this count may be inflated."]
     return {"summary": summary[:139], "indicator": indicator,
             "detail": "\n".join(detail),
-            "source": {"label": "ICU Liberation Bundle"}}
+            "source": {"label": "ICU Liberation Bundle Cards",
+                       "url": "https://doi.org/10.1055/a-2802-7458"}}
 
 class HookRequest(BaseModel):
     hook: str
@@ -171,6 +181,7 @@ def invoke(sid: str, req: HookRequest):
             "detail": ("The service received no prefetched resources and no FHIR "
                        "server it could query, so it is reporting nothing rather "
                        "than guessing."),
-            "source": {"label": "ICU Liberation Bundle"}}]}
+            "source": {"label": "ICU Liberation Bundle Cards",
+                       "url": "https://doi.org/10.1055/a-2802-7458"}}]}
     n = count_matching(bundle, codes_for(comp), datetime.now(timezone.utc))
     return {"cards": [build_card(comp, n)]}
