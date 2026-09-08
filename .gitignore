@@ -1,0 +1,9 @@
+# Ignore all large clinical data CSV files
+*.csv
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/

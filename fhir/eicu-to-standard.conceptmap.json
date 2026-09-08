@@ -1,0 +1,135 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "eicu-to-standard",
+  "url": "http://example.org/fhir/ConceptMap/eicu-to-standard",
+  "version": "0.1.0",
+  "name": "EICUFlowsheetToStandardCode",
+  "title": "eICU nurseCharting flowsheet label to SNOMED and LOINC",
+  "status": "draft",
+  "experimental": true,
+  "description": "Maps eICU nurseCharting flowsheet labels directly to standard ICU Liberation Bundle vocabularies (SNOMED CT and LOINC), independent of MIMIC-IV.",
+  "group": [
+    {
+      "source": "http://example.org/fhir/CodeSystem/eicu-charting-label",
+      "target": "http://snomed.info/sct",
+      "element": [
+        {
+          "code": "pain score/goal",
+          "display": "Pain Score/Goal",
+          "target": [
+            {
+              "code": "1284852002",
+              "display": "Numeric pain rating scale",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "pain assessment",
+          "display": "Pain Assessment",
+          "target": [
+            {
+              "code": "1284852002",
+              "display": "Numeric pain rating scale",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "pain present",
+          "display": "Pain Present",
+          "target": [
+            {
+              "code": "1284852002",
+              "display": "Numeric pain rating scale",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "rass",
+          "display": "RASS",
+          "target": [
+            {
+              "code": "457441000124102",
+              "display": "Richmond Agitation Sedation Scale",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "sedation scale/score/goal",
+          "display": "Sedation Scale/Score/Goal",
+          "target": [
+            {
+              "code": "457441000124102",
+              "display": "Richmond Agitation Sedation Scale",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "sedation score",
+          "display": "SEDATION SCORE",
+          "target": [
+            {
+              "code": "457441000124102",
+              "display": "Richmond Agitation Sedation Scale",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "mental status assessment",
+          "display": "Mental Status Assessment",
+          "target": [
+            {
+              "code": "733870009",
+              "display": "Delirium assessment status",
+              "relationship": "equivalent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "http://example.org/fhir/CodeSystem/eicu-charting-label",
+      "target": "http://loinc.org",
+      "element": [
+        {
+          "code": "delirium scale/score",
+          "display": "Delirium Scale/Score",
+          "target": [
+            {
+              "code": "95857-9",
+              "display": "CAM-ICU RASS LOC",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "symptoms of delirium present",
+          "display": "Symptoms of Delirium Present",
+          "target": [
+            {
+              "code": "95857-9",
+              "display": "CAM-ICU RASS LOC",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "level of assistance",
+          "display": "Level of Assistance",
+          "target": [
+            {
+              "code": "83185-9",
+              "display": "Transfer ability",
+              "relationship": "equivalent"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

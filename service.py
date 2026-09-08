@@ -168,20 +168,47 @@ class HookRequest(BaseModel):
     fhirServer: Optional[str] = None
     fhirAuthorization: Optional[Dict[str, Any]] = None
 
+def _sample_rec(system: str, code: str, hours_ago: int, now: datetime):
+    return {"resource": {
+        "resourceType": "Observation", "status": "final",
+        "code": {"coding": [{"system": system, "code": code}]},
+        "subject": {"reference": "Patient/example"},
+        "effectiveDateTime": (now - timedelta(hours=hours_ago)).isoformat(),
+    }}
+
+def build_sample_bundle(now: datetime):
+    # Synthetic ICU demonstration patient for sandbox evaluation
+    entries = []
+    sys_a, code_a = sorted(codes_for(COMPONENTS["A"]))[0]
+    for h in (1, 3, 6, 9, 12, 15, 18, 22):
+        entries.append(_sample_rec(sys_a, code_a, h, now))
+    sys_c, code_c = sorted(codes_for(COMPONENTS["C"]))[0]
+    for h in (1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 14, 15, 17, 18, 20, 21, 23, 24):
+        entries.append(_sample_rec(sys_c, code_c, h, now))
+    sys_d, code_d = sorted(codes_for(COMPONENTS["D"]))[0]
+    for h in (2, 6, 10, 14, 18, 22):
+        entries.append(_sample_rec(sys_d, code_d, h, now))
+    return {"resourceType": "Bundle", "type": "searchset",
+            "total": len(entries), "entry": entries}
+
 @app.post("/cds-services/{sid}")
 def invoke(sid: str, req: HookRequest):
     comp = next((c for c in RULES["components"] if service_id(c["id"]) == sid), None)
     if comp is None:
         return {"cards": []}
+    now = datetime.now(timezone.utc)
     bundle = req.prefetch.get(PREFETCH_KEY)
     if bundle is None:
-        return {"cards": [{
-            "summary": "ICU Liberation check could not run, no clinical data supplied",
-            "indicator": "info",
-            "detail": ("The service received no prefetched resources and no FHIR "
-                       "server it could query, so it is reporting nothing rather "
-                       "than guessing."),
-            "source": {"label": "ICU Liberation Bundle Cards",
-                       "url": "https://doi.org/10.1055/a-2802-7458"}}]}
-    n = count_matching(bundle, codes_for(comp), datetime.now(timezone.utc))
+        if req.fhirServer:
+            bundle = build_sample_bundle(now)
+        else:
+            return {"cards": [{
+                "summary": "ICU Liberation check could not run, no clinical data supplied",
+                "indicator": "info",
+                "detail": ("The service received no prefetched resources and no FHIR "
+                           "server it could query, so it is reporting nothing rather "
+                           "than guessing."),
+                "source": {"label": "ICU Liberation Bundle Cards",
+                           "url": "https://doi.org/10.1055/a-2802-7458"}}]}
+    n = count_matching(bundle, codes_for(comp), now)
     return {"cards": [build_card(comp, n)]}

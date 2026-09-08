@@ -12,38 +12,46 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import service as S
 
-CM_PATH = os.path.join(HERE, "fhir", "mimiciv-itemid-to-standard.conceptmap.json")
-CONCEPTMAP = json.load(open(CM_PATH, encoding="utf-8"))
+BASE = "http://example.org/fhir"
 CARDS = {c["id"]: c for c in S.RULES["components"]}
 
-def itemids_by_code():
-    out = defaultdict(set)
-    for g in CONCEPTMAP["group"]:
+def load_conceptmap(cm_path=None, data_path=""):
+    if cm_path and os.path.isfile(cm_path):
+        return json.load(open(cm_path, encoding="utf-8"))
+    if "eicu" in data_path.lower():
+        fname = "eicu-to-standard.conceptmap.json"
+    else:
+        fname = "mimiciv-itemid-to-standard.conceptmap.json"
+    return json.load(open(os.path.join(HERE, "fhir", fname), encoding="utf-8"))
+
+def build_maps(cm):
+    by_code = defaultdict(set)
+    imap = {}
+    for g in cm["group"]:
         for el in g["element"]:
+            raw_c = el["code"]
+            key = int(raw_c) if str(raw_c).isdigit() else str(raw_c).strip().lower()
             for t in el["target"]:
-                out[t["code"]].add(int(el["code"]))
-    return out
+                by_code[t["code"]].add(key)
+                imap[key] = (g["target"], t["code"], t.get("display", ""))
+    return by_code, imap
 
-BY_CODE = itemids_by_code()
-
-BASE = "http://example.org/fhir"
-
-def itemid_map():
-    cm = json.load(open(CM_PATH, encoding="utf-8"))
-    return {int(el["code"]): (g["target"], t["code"], t.get("display", ""))
-            for g in cm["group"] for el in g["element"] for t in el["target"]}
+DEFAULT_CM = load_conceptmap()
+BY_CODE, IMAP = build_maps(DEFAULT_CM)
 
 def parse_time(v):
     t = datetime.fromisoformat(str(v).replace("Z", "+00:00").replace(" ", "T"))
     return t if t.tzinfo else t.replace(tzinfo=timezone.utc)
 
-def to_bundle(rows, imap, unmapped=None):
+def to_bundle(rows, imap, code_col="itemid", unmapped=None):
     entries = []
     for r in rows:
-        hit = imap.get(int(r["itemid"]))
+        raw_val = r.get(code_col, "")
+        key = int(raw_val) if str(raw_val).isdigit() else str(raw_val).strip().lower()
+        hit = imap.get(key)
         if hit is None:
             if unmapped is not None:
-                unmapped.add(int(r["itemid"]))
+                unmapped.add(raw_val)
             continue
         system, code, display = hit
         obs = {
@@ -57,24 +65,29 @@ def to_bundle(rows, imap, unmapped=None):
     return {"resourceType": "Bundle", "type": "searchset",
             "total": len(entries), "entry": entries}
 
-def itemids_for(comp):
+def itemids_for(comp, by_code=None):
+    bmap = by_code if by_code is not None else BY_CODE
     if comp.get("count_only"):
-        return {int(i) for i in comp["count_only"]}
+        return {int(i) if str(i).isdigit() else str(i).lower() for i in comp["count_only"]}
     items = set()
     for (_system, code) in S.codes_for(comp):
-        items |= BY_CODE.get(code, set())
+        items |= bmap.get(code, set())
     return items
 
-def run(rows, comp_id, limit=None, verbose=False):
+def run(rows, comp_id, limit=None, verbose=False, code_col="itemid", by_code=None, imap=None):
     comp = CARDS[comp_id]
     presence = not comp["min_per_24h"]
-    wanted, imap = itemids_for(comp), itemid_map()
-    tags = {int(k): v for k, v in S.RULES["labels"].items()}
+    bmap = by_code if by_code is not None else BY_CODE
+    active_imap = imap if imap is not None else IMAP
+    wanted = itemids_for(comp, bmap)
+    tags = {int(k) if str(k).isdigit() else str(k).lower(): v for k, v in S.RULES["labels"].items()}
     days, buckets = set(), defaultdict(list)
     for r in rows:
         key = (r["subject_id"], parse_time(r["charttime"]).date())
         days.add(key)
-        if int(r["itemid"]) in wanted:
+        raw_val = r.get(code_col, "")
+        val_key = int(raw_val) if str(raw_val).isdigit() else str(raw_val).strip().lower()
+        if val_key in wanted:
             buckets[key].append(r)
     keys = sorted(days)[:limit] if limit else sorted(days)
     agree = compared = empty = met = 0
@@ -83,7 +96,7 @@ def run(rows, comp_id, limit=None, verbose=False):
         group = buckets.get(key, [])
         if group:
             unmapped = set()
-            bundle = to_bundle(group, imap, unmapped)
+            bundle = to_bundle(group, active_imap, code_col=code_col, unmapped=unmapped)
             dropped |= unmapped
             as_of = datetime.combine(key[1], datetime.max.time()).replace(
                 tzinfo=timezone.utc)
@@ -100,7 +113,10 @@ def run(rows, comp_id, limit=None, verbose=False):
         if verbose:
             counts = defaultdict(int)
             for r in group:
-                counts[tags.get(int(r["itemid"]), str(r["itemid"]))] += 1
+                raw_val = r.get(code_col, "")
+                val_key = int(raw_val) if str(raw_val).isdigit() else str(raw_val).strip().lower()
+                tag_name = tags.get(val_key, str(raw_val).title())
+                counts[tag_name] += 1
             done = ", ".join("%s x%d" % kv for kv in
                              sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])))
             done = (done[:59] + "...") if len(done) > 62 else (done or "nothing documented")
@@ -118,18 +134,23 @@ def cmd_validate(args):
         print("No such file:", path)
         return 1
     rows = list(csv.DictReader(open(path, newline="", encoding="utf-8")))
-    print("loaded %d chartevents rows from %s\n" % (len(rows), path))
-    missing = [c for c in ("subject_id", "itemid", "charttime")
-               if rows and c not in rows[0]]
+    code_col = "code" if rows and "code" in rows[0] else "itemid"
+    print("loaded %d rows from %s (using column: %s)\n" % (len(rows), path, code_col))
+    missing = [c for c in ("subject_id", "charttime") if rows and c not in rows[0]]
+    if rows and code_col not in rows[0]:
+        missing.append("code or itemid")
     if missing:
         print("Missing required columns: %s" % ", ".join(missing))
         return 1
+    cm = load_conceptmap(getattr(args, "conceptmap", None), path)
+    by_code, imap = build_maps(cm)
     all_dropped, rows_out, tot_agree, tot_cmp = set(), [], 0, 0
     for cid in [c.strip().upper() for c in args.component.split(",")]:
         if cid not in CARDS:
             print("unknown component", cid)
             continue
-        agree, compared, empty, met, total, mismatches, dropped = run(rows, cid, args.limit, args.verbose)
+        agree, compared, empty, met, total, mismatches, dropped = run(
+            rows, cid, args.limit, args.verbose, code_col=code_col, by_code=by_code, imap=imap)
         all_dropped |= dropped
         tot_agree += agree
         tot_cmp += compared
@@ -228,7 +249,7 @@ def cmd_test(args):
     n_codes = sum(len(v["codes"]) for v in S.VALUESETS.values())
     assert len(S.VALUESETS) == 6, sorted(S.VALUESETS)
     assert n_codes >= 30, n_codes
-    ids = {int(e["code"]) for g in CONCEPTMAP["group"] for e in g["element"]}
+    ids = {int(e["code"]) for g in DEFAULT_CM["group"] for e in g["element"]}
     assert ids <= {int(k) for k in S.RULES["labels"]}, "ConceptMap has itemids rules.json does not label"
     print("ok   6 value sets, %d codes, ConceptMap and rules.json agree" % n_codes)
     return 0
