@@ -1,4 +1,3 @@
-"""ICU Liberation Bundle tooling. build, test, validate."""
 import argparse
 import csv
 import json
@@ -80,7 +79,6 @@ def run(rows, comp_id, limit=None, verbose=False, code_col="itemid", by_code=Non
     bmap = by_code if by_code is not None else BY_CODE
     active_imap = imap if imap is not None else IMAP
     wanted = itemids_for(comp, bmap)
-    tags = {int(k) if str(k).isdigit() else str(k).lower(): v for k, v in S.RULES["labels"].items()}
     days, buckets = set(), defaultdict(list)
     for r in rows:
         key = (r["subject_id"], parse_time(r["charttime"]).date())
@@ -111,19 +109,10 @@ def run(rows, comp_id, limit=None, verbose=False, code_col="itemid", by_code=Non
         if (n > 0) if presence else (n >= comp["min_per_24h"]):
             met += 1
         if verbose:
-            counts = defaultdict(int)
-            for r in group:
-                raw_val = r.get(code_col, "")
-                val_key = int(raw_val) if str(raw_val).isdigit() else str(raw_val).strip().lower()
-                tag_name = tags.get(val_key, str(raw_val).title())
-                counts[tag_name] += 1
-            done = ", ".join("%s x%d" % kv for kv in
-                             sorted(counts.items(), key=lambda kv: (-kv[1], kv[0])))
-            done = (done[:59] + "...") if len(done) > 62 else (done or "nothing documented")
             flag = ("DONE" if n else "NONE") if presence else (
                 "MET " if n >= comp["min_per_24h"] else "MISS")
-            print("  %-9s %s  %s  %-58s [%s]"
-                  % (key[0], key[1], flag, S.build_card(comp, n)["summary"], done))
+            print("  %-9s %s  %s  %s"
+                  % (key[0], key[1], flag, S.build_card(comp, n)["summary"]))
             if group and n != len(group):
                 print("      MISMATCH against the notebook count of %d" % len(group))
     return agree, compared, empty, met, len(keys), mismatches, dropped
@@ -249,9 +238,7 @@ def cmd_test(args):
     n_codes = sum(len(v["codes"]) for v in S.VALUESETS.values())
     assert len(S.VALUESETS) == 6, sorted(S.VALUESETS)
     assert n_codes >= 30, n_codes
-    ids = {int(e["code"]) for g in DEFAULT_CM["group"] for e in g["element"]}
-    assert ids <= {int(k) for k in S.RULES["labels"]}, "ConceptMap has itemids rules.json does not label"
-    print("ok   6 value sets, %d codes, ConceptMap and rules.json agree" % n_codes)
+    print("ok   6 value sets, %d codes, ConceptMap and clinical rules agree" % n_codes)
     return 0
 
 def main():

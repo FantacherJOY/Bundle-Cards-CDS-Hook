@@ -70,5 +70,3 @@ uvicorn service:app --reload --port 8000
 - **Discovery endpoint:** `http://localhost:8000/cds-services`
 - **Interactive documentation (Swagger UI):** `http://localhost:8000/docs`
 - **CDS Hooks Sandbox:** Open [sandbox.cds-hooks.org](https://sandbox.cds-hooks.org), click **Add CDS Service**, and add `http://localhost:8000/cds-services`. Your cards will render directly inside the mock EHR view.
-
-
