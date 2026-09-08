@@ -15,7 +15,7 @@
       "name": "Breathing trials",
       "title": "Spontaneous awakening and spontaneous breathing trials",
       "instrument": "SAT and SBT documentation",
-      "significant": "SBT safety screen requires SpO2 at or above 88 percent, FiO2 under 50 percent and PEEP under 7.5 cmH2O",
+      "significant": "SCCM defines no numeric adherence threshold for this component",
       "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-b",
       "min_per_24h": null,
       "count_only": null
@@ -28,9 +28,7 @@
       "significant": "Goal RASS is typically 0 to -2",
       "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-c",
       "min_per_24h": 6,
-      "count_only": [
-        "228096"
-      ]
+      "count_only": null
     },
     {
       "id": "D",

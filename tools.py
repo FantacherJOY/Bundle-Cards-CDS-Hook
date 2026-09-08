@@ -118,7 +118,10 @@ def run(rows, comp_id, limit=None, verbose=False, code_col="itemid", by_code=Non
     return agree, compared, empty, met, len(keys), mismatches, dropped
 
 def cmd_validate(args):
-    path = args.csv or "chartevents.csv"
+    path = args.csv
+    if not path:
+        candidates = ["chartevents.csv", "eICU_chartevents.csv"]
+        path = next((f for f in candidates if os.path.isfile(f)), "chartevents.csv")
     if not os.path.isfile(path):
         print("No such file:", path)
         return 1
