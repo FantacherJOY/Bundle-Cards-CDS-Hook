@@ -1,0 +1,53 @@
+{
+  "resourceType": "ValueSet",
+  "id": "icu-liberation-a",
+  "url": "http://example.org/fhir/ValueSet/icu-liberation-a",
+  "version": "0.1.0",
+  "name": "ICULiberationComponentA",
+  "title": "ICU Liberation Bundle, component A, pain",
+  "status": "draft",
+  "experimental": true,
+  "description": "Assessment, prevention and management of pain",
+  "compose": {
+    "include": [
+      {
+        "system": "http://example.org/fhir/CodeSystem/omop-extension",
+        "concept": [
+          {
+            "code": "OMOP5214828",
+            "display": "CPOT muscle tension score"
+          },
+          {
+            "code": "OMOP5214836",
+            "display": "CPOT vocalization score"
+          },
+          {
+            "code": "OMOP5214824",
+            "display": "CPOT body movements score"
+          },
+          {
+            "code": "OMOP5214820",
+            "display": "CPOT facial expression score"
+          },
+          {
+            "code": "OMOP5214819",
+            "display": "CPOT total score"
+          }
+        ]
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "1284852002",
+            "display": "Numeric pain rating scale"
+          },
+          {
+            "code": "273313008",
+            "display": "Behavioral pain scale"
+          }
+        ]
+      }
+    ]
+  }
+}

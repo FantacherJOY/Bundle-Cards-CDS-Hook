@@ -1,0 +1,110 @@
+{
+  "components": [
+    {
+      "id": "A",
+      "name": "Pain",
+      "title": "Assessment, prevention and management of pain",
+      "instrument": "CPOT, NRS or BPS",
+      "significant": "CPOT greater than 2, BPS greater than 5, or NRS greater than 3",
+      "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-a",
+      "min_per_24h": 6,
+      "count_only": null
+    },
+    {
+      "id": "B",
+      "name": "Breathing trials",
+      "title": "Spontaneous awakening and spontaneous breathing trials",
+      "instrument": "SAT and SBT documentation",
+      "significant": "SBT safety screen requires SpO2 at or above 88 percent, FiO2 under 50 percent and PEEP under 7.5 cmH2O",
+      "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-b",
+      "min_per_24h": null,
+      "count_only": null
+    },
+    {
+      "id": "C",
+      "name": "Sedation",
+      "title": "Choice of analgesia and sedation",
+      "instrument": "RASS",
+      "significant": "Goal RASS is typically 0 to -2",
+      "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-c",
+      "min_per_24h": 6,
+      "count_only": [
+        "228096"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Delirium",
+      "title": "Delirium assessment, prevention and management",
+      "instrument": "CAM-ICU",
+      "significant": "CAM-ICU positive, negative or unable to assess",
+      "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-d",
+      "min_per_24h": 2,
+      "count_only": null
+    },
+    {
+      "id": "E",
+      "name": "Early mobility",
+      "title": "Early mobility and exercise",
+      "instrument": "Mobility and transfer assessments",
+      "significant": "SCCM defines no numeric adherence threshold for this component",
+      "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-e",
+      "min_per_24h": null,
+      "count_only": null
+    },
+    {
+      "id": "F",
+      "name": "Family engagement",
+      "title": "Family engagement and empowerment",
+      "instrument": "Documented family communication",
+      "significant": "SCCM defines no numeric adherence threshold for this component",
+      "valueSet": "http://example.org/fhir/ValueSet/icu-liberation-f",
+      "min_per_24h": null,
+      "count_only": null
+    }
+  ],
+  "labels": {
+    "229691": "CPOT-Muscle",
+    "229692": "CPOT-Muscle",
+    "229694": "CPOT-Vocal",
+    "229695": "CPOT-Vocal",
+    "229696": "CPOT-Body",
+    "229697": "CPOT-Body",
+    "229698": "CPOT-Facial",
+    "229699": "CPOT-Facial",
+    "223849": "VentMode",
+    "229314": "VentMode",
+    "224715": "SBT-Start",
+    "224716": "SBT-Stop",
+    "224717": "SBT-Done",
+    "224833": "SBT-Defer",
+    "228096": "RASS",
+    "228299": "RASS-Goal",
+    "230116": "SedMeds",
+    "230117": "AnalgMeds",
+    "228302": "CAM-RASS-LOC",
+    "228300": "CAM-MS",
+    "228337": "CAM-MS",
+    "229326": "CAM-MS",
+    "228301": "CAM-Inatt",
+    "228336": "CAM-Inatt",
+    "229325": "CAM-Inatt",
+    "228334": "CAM-LOC",
+    "228303": "CAM-Disorg",
+    "228335": "CAM-Disorg",
+    "229324": "CAM-Disorg",
+    "228332": "Delirium",
+    "228688": "Delirium",
+    "225176": "ROM",
+    "224092": "ROM",
+    "227847": "SitToStand",
+    "227345": "Mobility",
+    "227848": "Transfer",
+    "228697": "MobPlan",
+    "224024": "FamComm",
+    "224447": "FamMeeting",
+    "224855": "FamInformed",
+    "227662": "FamInformed",
+    "227960": "FamInformed"
+  }
+}

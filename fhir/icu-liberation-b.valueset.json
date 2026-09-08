@@ -1,0 +1,57 @@
+{
+  "resourceType": "ValueSet",
+  "id": "icu-liberation-b",
+  "url": "http://example.org/fhir/ValueSet/icu-liberation-b",
+  "version": "0.1.0",
+  "name": "ICULiberationComponentB",
+  "title": "ICU Liberation Bundle, component B, breathing trials",
+  "status": "draft",
+  "experimental": true,
+  "description": "Spontaneous awakening and spontaneous breathing trials",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "93203-8",
+            "display": "SBT started"
+          },
+          {
+            "code": "87542-7",
+            "display": "SBT successfully completed"
+          }
+        ]
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "372614000",
+            "display": "Sedative"
+          },
+          {
+            "code": "72641008",
+            "display": "Sedative route"
+          },
+          {
+            "code": "424282004",
+            "display": "SAT assessment"
+          },
+          {
+            "code": "407563006",
+            "display": "SAT failure"
+          },
+          {
+            "code": "1258985005",
+            "display": "Ventilation mode"
+          },
+          {
+            "code": "416237000",
+            "display": "SBT deferred"
+          }
+        ]
+      }
+    ]
+  }
+}

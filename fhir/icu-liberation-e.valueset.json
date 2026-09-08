@@ -1,0 +1,50 @@
+{
+  "resourceType": "ValueSet",
+  "id": "icu-liberation-e",
+  "url": "http://example.org/fhir/ValueSet/icu-liberation-e",
+  "version": "0.1.0",
+  "name": "ICULiberationComponentE",
+  "title": "ICU Liberation Bundle, component E, early mobility",
+  "status": "draft",
+  "experimental": true,
+  "description": "Early mobility and exercise",
+  "compose": {
+    "include": [
+      {
+        "system": "http://example.org/fhir/CodeSystem/mimiciv-itemid",
+        "concept": [
+          {
+            "code": "228697",
+            "display": "Mobilization plan"
+          }
+        ]
+      },
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "89393-3",
+            "display": "Sit to stand ability"
+          },
+          {
+            "code": "83185-9",
+            "display": "Transfer ability"
+          }
+        ]
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "228528009",
+            "display": "Range of motion status"
+          },
+          {
+            "code": "363803005",
+            "display": "Activity and mobility"
+          }
+        ]
+      }
+    ]
+  }
+}

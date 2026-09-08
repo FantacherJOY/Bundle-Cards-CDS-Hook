@@ -1,0 +1,32 @@
+{
+  "resourceType": "ValueSet",
+  "id": "icu-liberation-f",
+  "url": "http://example.org/fhir/ValueSet/icu-liberation-f",
+  "version": "0.1.0",
+  "name": "ICULiberationComponentF",
+  "title": "ICU Liberation Bundle, component F, family engagement",
+  "status": "draft",
+  "experimental": true,
+  "description": "Family engagement and empowerment",
+  "compose": {
+    "include": [
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "14641000202103",
+            "display": "Family communication"
+          },
+          {
+            "code": "711070007",
+            "display": "Family meeting"
+          },
+          {
+            "code": "406141002",
+            "display": "Family informed"
+          }
+        ]
+      }
+    ]
+  }
+}

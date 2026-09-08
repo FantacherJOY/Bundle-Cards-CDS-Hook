@@ -1,0 +1,49 @@
+{
+  "resourceType": "ValueSet",
+  "id": "icu-liberation-d",
+  "url": "http://example.org/fhir/ValueSet/icu-liberation-d",
+  "version": "0.1.0",
+  "name": "ICULiberationComponentD",
+  "title": "ICU Liberation Bundle, component D, delirium",
+  "status": "draft",
+  "experimental": true,
+  "description": "Delirium assessment, prevention and management",
+  "compose": {
+    "include": [
+      {
+        "system": "http://loinc.org",
+        "concept": [
+          {
+            "code": "95857-9",
+            "display": "CAM-ICU RASS LOC"
+          },
+          {
+            "code": "54632-5",
+            "display": "CAM-ICU mental status change"
+          },
+          {
+            "code": "106402-1",
+            "display": "CAM-ICU inattention"
+          },
+          {
+            "code": "95815-7",
+            "display": "CAM-ICU altered LOC"
+          },
+          {
+            "code": "95814-0",
+            "display": "CAM-ICU disorganized thinking"
+          }
+        ]
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "733870009",
+            "display": "Delirium assessment status"
+          }
+        ]
+      }
+    ]
+  }
+}

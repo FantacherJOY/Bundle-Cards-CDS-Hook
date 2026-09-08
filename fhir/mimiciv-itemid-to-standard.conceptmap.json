@@ -1,0 +1,477 @@
+{
+  "resourceType": "ConceptMap",
+  "id": "mimiciv-itemid-to-standard",
+  "url": "http://example.org/fhir/ConceptMap/mimiciv-itemid-to-standard",
+  "version": "0.1.0",
+  "name": "MIMICIVItemIdToStandardCode",
+  "title": "MIMIC-IV chartevents itemid to SNOMED, LOINC or OMOP Extension",
+  "status": "draft",
+  "experimental": true,
+  "description": "Makes the retrospective MIMIC-IV analysis and the live FHIR service refer to the same concepts. Derived from the source tables.",
+  "group": [
+    {
+      "source": "http://example.org/fhir/CodeSystem/mimiciv-itemid",
+      "target": "http://example.org/fhir/CodeSystem/mimiciv-itemid",
+      "element": [
+        {
+          "code": "228697",
+          "display": "Mobilization plan",
+          "target": [
+            {
+              "code": "228697",
+              "display": "Mobilization plan",
+              "relationship": "equivalent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "http://example.org/fhir/CodeSystem/mimiciv-itemid",
+      "target": "http://example.org/fhir/CodeSystem/omop-extension",
+      "element": [
+        {
+          "code": "229691",
+          "display": "CPOT muscle tension score",
+          "target": [
+            {
+              "code": "OMOP5214828",
+              "display": "CPOT muscle tension score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229692",
+          "display": "CPOT muscle tension score",
+          "target": [
+            {
+              "code": "OMOP5214828",
+              "display": "CPOT muscle tension score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229694",
+          "display": "CPOT vocalization score",
+          "target": [
+            {
+              "code": "OMOP5214836",
+              "display": "CPOT vocalization score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229695",
+          "display": "CPOT vocalization score",
+          "target": [
+            {
+              "code": "OMOP5214836",
+              "display": "CPOT vocalization score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229696",
+          "display": "CPOT body movements score",
+          "target": [
+            {
+              "code": "OMOP5214824",
+              "display": "CPOT body movements score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229697",
+          "display": "CPOT body movements score",
+          "target": [
+            {
+              "code": "OMOP5214824",
+              "display": "CPOT body movements score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229698",
+          "display": "CPOT facial expression score",
+          "target": [
+            {
+              "code": "OMOP5214820",
+              "display": "CPOT facial expression score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229699",
+          "display": "CPOT facial expression score",
+          "target": [
+            {
+              "code": "OMOP5214820",
+              "display": "CPOT facial expression score",
+              "relationship": "equivalent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "http://example.org/fhir/CodeSystem/mimiciv-itemid",
+      "target": "http://loinc.org",
+      "element": [
+        {
+          "code": "224715",
+          "display": "SBT started",
+          "target": [
+            {
+              "code": "93203-8",
+              "display": "SBT started",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "224717",
+          "display": "SBT successfully completed",
+          "target": [
+            {
+              "code": "87542-7",
+              "display": "SBT successfully completed",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228302",
+          "display": "CAM-ICU RASS LOC",
+          "target": [
+            {
+              "code": "95857-9",
+              "display": "CAM-ICU RASS LOC",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228300",
+          "display": "CAM-ICU mental status change",
+          "target": [
+            {
+              "code": "54632-5",
+              "display": "CAM-ICU mental status change",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228337",
+          "display": "CAM-ICU mental status change",
+          "target": [
+            {
+              "code": "54632-5",
+              "display": "CAM-ICU mental status change",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229326",
+          "display": "CAM-ICU mental status change",
+          "target": [
+            {
+              "code": "54632-5",
+              "display": "CAM-ICU mental status change",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228301",
+          "display": "CAM-ICU inattention",
+          "target": [
+            {
+              "code": "106402-1",
+              "display": "CAM-ICU inattention",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228336",
+          "display": "CAM-ICU inattention",
+          "target": [
+            {
+              "code": "106402-1",
+              "display": "CAM-ICU inattention",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229325",
+          "display": "CAM-ICU inattention",
+          "target": [
+            {
+              "code": "106402-1",
+              "display": "CAM-ICU inattention",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228334",
+          "display": "CAM-ICU altered LOC",
+          "target": [
+            {
+              "code": "95815-7",
+              "display": "CAM-ICU altered LOC",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228303",
+          "display": "CAM-ICU disorganized thinking",
+          "target": [
+            {
+              "code": "95814-0",
+              "display": "CAM-ICU disorganized thinking",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228335",
+          "display": "CAM-ICU disorganized thinking",
+          "target": [
+            {
+              "code": "95814-0",
+              "display": "CAM-ICU disorganized thinking",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229324",
+          "display": "CAM-ICU disorganized thinking",
+          "target": [
+            {
+              "code": "95814-0",
+              "display": "CAM-ICU disorganized thinking",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "227847",
+          "display": "Sit to stand ability",
+          "target": [
+            {
+              "code": "89393-3",
+              "display": "Sit to stand ability",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "227848",
+          "display": "Transfer ability",
+          "target": [
+            {
+              "code": "83185-9",
+              "display": "Transfer ability",
+              "relationship": "equivalent"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "source": "http://example.org/fhir/CodeSystem/mimiciv-itemid",
+      "target": "http://snomed.info/sct",
+      "element": [
+        {
+          "code": "223849",
+          "display": "Ventilation mode",
+          "target": [
+            {
+              "code": "1258985005",
+              "display": "Ventilation mode",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "229314",
+          "display": "Ventilation mode",
+          "target": [
+            {
+              "code": "1258985005",
+              "display": "Ventilation mode",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "224716",
+          "display": "SBT stopped",
+          "target": [
+            {
+              "code": "407563006",
+              "display": "SBT stopped",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "224833",
+          "display": "SBT deferred",
+          "target": [
+            {
+              "code": "416237000",
+              "display": "SBT deferred",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228096",
+          "display": "RASS score",
+          "target": [
+            {
+              "code": "457441000124102",
+              "display": "RASS score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228299",
+          "display": "Goal RASS score",
+          "target": [
+            {
+              "code": "457441000124102",
+              "display": "Goal RASS score",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228332",
+          "display": "Delirium assessment status",
+          "target": [
+            {
+              "code": "733870009",
+              "display": "Delirium assessment status",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "228688",
+          "display": "Delirium assessment status",
+          "target": [
+            {
+              "code": "733870009",
+              "display": "Delirium assessment status",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "225176",
+          "display": "Range of motion status",
+          "target": [
+            {
+              "code": "228528009",
+              "display": "Range of motion status",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "224092",
+          "display": "Range of motion status",
+          "target": [
+            {
+              "code": "228528009",
+              "display": "Range of motion status",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "227345",
+          "display": "Activity and mobility",
+          "target": [
+            {
+              "code": "363803005",
+              "display": "Activity and mobility",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "224024",
+          "display": "Family communication",
+          "target": [
+            {
+              "code": "14641000202103",
+              "display": "Family communication",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "224447",
+          "display": "Family meeting",
+          "target": [
+            {
+              "code": "711070007",
+              "display": "Family meeting",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "224855",
+          "display": "Family informed",
+          "target": [
+            {
+              "code": "406141002",
+              "display": "Family informed",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "227662",
+          "display": "Family informed",
+          "target": [
+            {
+              "code": "406141002",
+              "display": "Family informed",
+              "relationship": "equivalent"
+            }
+          ]
+        },
+        {
+          "code": "227960",
+          "display": "Family informed",
+          "target": [
+            {
+              "code": "406141002",
+              "display": "Family informed",
+              "relationship": "equivalent"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

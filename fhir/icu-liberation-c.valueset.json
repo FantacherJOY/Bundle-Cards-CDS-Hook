@@ -1,0 +1,32 @@
+{
+  "resourceType": "ValueSet",
+  "id": "icu-liberation-c",
+  "url": "http://example.org/fhir/ValueSet/icu-liberation-c",
+  "version": "0.1.0",
+  "name": "ICULiberationComponentC",
+  "title": "ICU Liberation Bundle, component C, sedation",
+  "status": "draft",
+  "experimental": true,
+  "description": "Choice of analgesia and sedation",
+  "compose": {
+    "include": [
+      {
+        "system": "http://snomed.info/sct",
+        "concept": [
+          {
+            "code": "457441000124102",
+            "display": "RASS score"
+          },
+          {
+            "code": "1345048008",
+            "display": "Richmond Agitation Sedation Scale"
+          },
+          {
+            "code": "1345050000",
+            "display": "Richmond Agitation Sedation Scale score"
+          }
+        ]
+      }
+    ]
+  }
+}
